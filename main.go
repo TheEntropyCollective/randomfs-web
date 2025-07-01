@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	randomfs "github.com/TheEntropyCollective/randomfs-core"
 	"github.com/gorilla/mux"
@@ -70,6 +71,17 @@ func (s *Server) setupRoutes() {
 
 	// File access routes
 	s.router.HandleFunc("/rd/{encodedURL}", s.handleFileAccess).Methods("GET")
+
+	// Redirect root without trailing slash to force cache refresh
+	s.router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/" {
+			// Add timestamp to force cache refresh
+			timestamp := time.Now().Unix()
+			http.Redirect(w, r, fmt.Sprintf("/?t=%d", timestamp), http.StatusTemporaryRedirect)
+			return
+		}
+		s.handleStatic(w, r)
+	}).Methods("GET")
 
 	// Static file serving - serve web files
 	s.router.PathPrefix("/").HandlerFunc(s.handleStatic)
@@ -224,6 +236,13 @@ func (s *Server) handleStatic(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Add aggressive cache-busting headers
+	w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0")
+	w.Header().Set("Pragma", "no-cache")
+	w.Header().Set("Expires", "Thu, 01 Jan 1970 00:00:00 GMT")
+	w.Header().Set("Last-Modified", time.Now().UTC().Format(http.TimeFormat))
+	w.Header().Set("ETag", fmt.Sprintf(`"%d"`, time.Now().Unix()))
+
 	http.ServeFile(w, r, filePath)
 }
 
@@ -250,10 +269,8 @@ func main() {
 	}
 	if envIPFSAPI := os.Getenv("RANDOMFS_IPFS_API"); envIPFSAPI != "" {
 		ipfsAPI = envIPFSAPI
-	} else {
-		// If RANDOMFS_IPFS_API is not set, use empty string to disable IPFS
-		ipfsAPI = ""
 	}
+	// Note: If RANDOMFS_IPFS_API is not set, we use the default "http://localhost:5001"
 
 	// Create server
 	server, err := NewServer(port, dataDir, ipfsAPI)

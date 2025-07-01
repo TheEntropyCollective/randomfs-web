@@ -271,12 +271,16 @@
         loadStats();
 
         // Upload area click handler
-        uploadBtn.addEventListener('click', () => {
+        uploadBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling to uploadArea
             fileInput.click();
         });
 
-        uploadArea.addEventListener('click', () => {
-            fileInput.click();
+        uploadArea.addEventListener('click', (e) => {
+            // Only trigger if the click was directly on the upload area, not on the button
+            if (e.target === uploadArea) {
+                fileInput.click();
+            }
         });
 
         // Drag and drop handlers
