@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RandomFS - Owner Free File System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            transition: border-color 0.3s;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background-color: #f8f9ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #667eea;
+            background-color: #f0f4ff;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .upload-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .result {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .rd-url {
+            background: #e7f3ff;
+            border: 1px solid #b3d7ff;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            word-break: break-all;
+            cursor: pointer;
+        }
+
+        .rd-url:hover {
+            background: #d1ecff;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .progress {
+            width: 100%;
+            height: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .about {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .about h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .about p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>RandomFS</h1>
+            <p>Modern Owner Free File System powered by IPFS</p>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>Upload File</h2>
+                <div class="upload-area" id="uploadArea">
+                    <p>🗂️ Drop files here or click to browse</p>
+                    <input type="file" id="fileInput" class="file-input" multiple>
+                    <br><br>
+                    <button class="upload-btn" id="uploadBtn">Choose Files</button>
+                </div>
+                <div class="progress" id="progressContainer" style="display: none;">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="result" id="result"></div>
+            </div>
+
+            <div class="section">
+                <h2>System Statistics</h2>
+                <div class="stats" id="stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="filesStored">0</div>
+                        <div class="stat-label">Files Stored</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="blocksGenerated">0</div>
+                        <div class="stat-label">Blocks Generated</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalSize">0</div>
+                        <div class="stat-label">Total Size</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="cacheHits">0</div>
+                        <div class="stat-label">Cache Hits</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about">
+                <h3>About RandomFS</h3>
+                <p>RandomFS is a modern implementation of the Owner Free File System (OFF System) concept, built on top of IPFS. It stores files as randomized, multi-use data blocks that appear as digital noise individually but can be combined to reconstruct the original files.</p>
+                <p><strong>Key Features:</strong></p>
+                <ul>
+                    <li>Files are split into randomized blocks stored on IPFS</li>
+                    <li>Each block serves multiple files simultaneously</li>
+                    <li>Access via rd:// URLs for decentralized retrieval</li>
+                    <li>Three block sizes optimized for different file categories</li>
+                    <li>Local caching for improved performance</li>
+                </ul>
+                <p><strong>rd:// URL Format:</strong> rd://host/version/filesize/filename/timestamp/hash</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const result = document.getElementById('result');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+
+        // Load stats on page load
+        loadStats();
+
+        // Upload area click handler
+        uploadBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Drag and drop handlers
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            uploadFiles(files);
+        });
+
+        // File input change handler
+        fileInput.addEventListener('change', (e) => {
+            uploadFiles(e.target.files);
+        });
+
+        async function uploadFiles(files) {
+            if (files.length === 0) return;
+
+            result.innerHTML = '';
+            result.classList.remove('show');
+            progressContainer.style.display = 'block';
+            uploadBtn.disabled = true;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                progressBar.style.width = ((i / files.length) * 100) + '%';
+                
+                try {
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    const response = await fetch('/api/v1/store', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Upload failed');
+                    }
+
+                    const data = await response.json();
+                    
+                    result.innerHTML += `
+                        <div style="margin-bottom: 20px;">
+                            <h4>✅ ${file.name} uploaded successfully!</h4>
+                            <p><strong>rd:// URL:</strong></p>
+                            <div class="rd-url" onclick="copyToClipboard('${data.url}')">
+                                ${data.url}
+                                <button class="copy-btn">Copy</button>
+                            </div>
+                            <p><strong>IPFS Hash:</strong> ${data.hash}</p>
+                            <p><strong>Access URL:</strong> <a href="/rd/${btoa(data.url)}" target="_blank">/rd/${btoa(data.url)}</a></p>
+                        </div>
+                    `;
+
+                } catch (error) {
+                    result.innerHTML += `
+                        <div style="margin-bottom: 20px;">
+                            <h4>❌ Failed to upload ${file.name}</h4>
+                            <p>Error: ${error.message}</p>
+                        </div>
+                    `;
+                }
+            }
+
+            progressBar.style.width = '100%';
+            setTimeout(() => {
+                progressContainer.style.display = 'none';
+                progressBar.style.width = '0%';
+            }, 500);
+
+            result.classList.add('show');
+            uploadBtn.disabled = false;
+            fileInput.value = '';
+            
+            // Reload stats
+            loadStats();
+        }
+
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/v1/stats');
+                const stats = await response.json();
+                
+                document.getElementById('filesStored').textContent = stats.files_stored || 0;
+                document.getElementById('blocksGenerated').textContent = stats.blocks_generated || 0;
+                document.getElementById('totalSize').textContent = formatBytes(stats.total_size || 0);
+                document.getElementById('cacheHits').textContent = stats.cache_hits || 0;
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+            }
+        }
+
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('rd:// URL copied to clipboard!');
+            }).catch(err => {
+                console.error('Could not copy text: ', err);
+            });
+        }
+
+        // Auto-refresh stats every 30 seconds
+        setInterval(loadStats, 30000);
+    </script>
+</body>
+</html> 
