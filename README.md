@@ -1,273 +1,265 @@
-# RandomFS Web Interface
+# RandomFS Web Server
 
-A modern, responsive web interface for the Owner Free File System, providing an intuitive browser-based experience for storing and retrieving files using randomized blocks on IPFS.
+A modern, responsive web server for the Owner Free File System, providing an intuitive browser-based experience for storing and retrieving files using randomized blocks on IPFS.
 
 ## Overview
 
-RandomFS Web Interface is a standalone web application that provides a beautiful, user-friendly interface for interacting with RandomFS. It's built with vanilla HTML, CSS, and JavaScript, making it easy to deploy and customize.
+RandomFS Web Server is a standalone Go executable that provides a beautiful, user-friendly web interface for interacting with RandomFS. It combines the power of RandomFS with a modern web interface, making it easy to upload, store, and share files through the browser.
 
 ## Features
 
+- **Web Interface**: Beautiful, responsive web UI for file management
 - **Drag & Drop Upload**: Intuitive file upload with drag-and-drop support
 - **File Management**: View and manage stored files
 - **rd:// URL Generation**: Automatic URL creation for file sharing
-- **Download Links**: Direct download functionality
+- **Direct File Access**: Access files via `/rd/{encodedURL}` endpoints
 - **Real-time Statistics**: Live system metrics display
-- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
-- **Modern UI**: Clean, professional interface with smooth animations
-- **Cross-browser Compatible**: Works in all modern browsers
-- **No Dependencies**: Pure HTML/CSS/JS - no frameworks required
+- **RESTful API**: Full API for programmatic access
+- **IPFS Integration**: Seamless integration with IPFS for decentralized storage
+- **Local Caching**: Fast access with intelligent caching
+- **Cross-platform**: Runs on Windows, macOS, and Linux
 
 ## Quick Start
 
-### Standalone Usage
+### Prerequisites
+- Go 1.21 or later
+- IPFS daemon running (optional, can run without IPFS for testing)
+
+### Building and Running
+
 ```bash
 # Clone the repository
-git clone https://github.com/TheEntropyCollective/randomfs-web
-cd randomfs-web
+git clone https://github.com/TheEntropyCollective/randomfs
+cd randomfs/randomfs-web
 
-# Serve with any web server
-python3 -m http.server 8000
-# or
-npx serve .
-# or
-php -S localhost:8000
+# Install dependencies
+go mod tidy
+
+# Build the executable
+go build -o randomfs-web main.go
+
+# Run the server
+./randomfs-web
 ```
 
-### With RandomFS HTTP Server
-The web interface is designed to work seamlessly with the RandomFS HTTP Server:
+Then visit `http://localhost:8080` to access the web interface.
+
+### Using Make
 
 ```bash
-# Start the HTTP server with web interface
-./randomfs-http -web ./randomfs-web
+# Build and run
+make run
+
+# Run on custom port
+make run-port PORT=3000
+
+# Run without IPFS (for testing)
+make run-no-ipfs
+
+# Show all available commands
+make help
 ```
 
-Then visit `http://localhost:8080` to access the interface.
+## Configuration
+
+The server can be configured using environment variables:
+
+```bash
+# Server port (default: 8080)
+export RANDOMFS_PORT=3000
+
+# Data directory (default: ./data)
+export RANDOMFS_DATA_DIR=/path/to/data
+
+# IPFS API endpoint (default: http://localhost:5001)
+export RANDOMFS_IPFS_API=http://localhost:5001
+
+# Run the server
+./randomfs-web
+```
+
+## API Endpoints
+
+### File Operations
+- `POST /api/v1/store` - Upload a file
+- `GET /api/v1/retrieve/{hash}` - Download a file by hash
+- `GET /rd/{encodedURL}` - Access file via encoded rd:// URL
+
+### System Information
+- `GET /api/v1/stats` - Get system statistics
+
+### Web Interface
+- `GET /` - Main web interface
+- `GET /index.html` - Web interface (same as root)
+
+## Usage Examples
+
+### Upload a File via API
+```bash
+curl -X POST -F "file=@/path/to/file.txt" http://localhost:8080/api/v1/store
+```
+
+Response:
+```json
+{
+  "url": "rd://randomfs/v4/1024/file.txt/1640995200/QmHash...",
+  "hash": "QmHash..."
+}
+```
+
+### Get System Statistics
+```bash
+curl http://localhost:8080/api/v1/stats
+```
+
+Response:
+```json
+{
+  "files_stored": 42,
+  "blocks_generated": 156,
+  "total_size": 1048576,
+  "cache_hits": 89,
+  "cache_misses": 12
+}
+```
+
+### Access File via Web URL
+```bash
+# The rd:// URL is base64 encoded in the web path
+curl http://localhost:8080/rd/cmQ6Ly9yYW5kb21mcy92NC8xMDI0L2ZpbGUudHh0LzE2NDA5OTUyMDAvUW1IYXNoLi4u
+```
 
 ## File Structure
 
 ```
 randomfs-web/
-├── index.html          # Main application page
-├── css/
-│   ├── style.css       # Main stylesheet
-│   └── responsive.css  # Responsive design rules
-├── js/
-│   ├── app.js          # Main application logic
-│   ├── upload.js       # File upload handling
-│   ├── api.js          # API communication
-│   └── utils.js        # Utility functions
-├── assets/
-│   ├── icons/          # Application icons
-│   └── images/         # Background images
-└── README.md           # This file
+├── main.go              # Main server executable
+├── go.mod               # Go module definition
+├── go.sum               # Go module checksums
+├── Makefile             # Build and run commands
+├── web/
+│   └── index.html       # Web interface
+├── data/                # Local data storage (created automatically)
+└── README.md            # This file
 ```
-
-## API Integration
-
-The web interface communicates with the RandomFS HTTP Server API:
-
-### Endpoints Used
-- `POST /api/v1/store` - Upload files
-- `GET /api/v1/stats` - Get system statistics
-- `GET /api/v1/retrieve/{hash}` - Download files
-- `GET /api/v1/parse/{rd_url}` - Parse rd:// URLs
-
-### Configuration
-The interface automatically detects the API endpoint. You can customize it by setting:
-
-```javascript
-// In js/api.js
-const API_BASE = 'http://localhost:8080/api/v1';
-```
-
-## Usage Guide
-
-### Uploading Files
-1. **Drag & Drop**: Simply drag files from your file manager to the upload area
-2. **Click to Browse**: Click the upload area to open a file browser
-3. **Multiple Files**: Select multiple files at once for batch upload
-4. **Progress Tracking**: See real-time upload progress
-5. **rd:// URL Generation**: Get shareable rd:// URLs immediately after upload
-
-### Managing Files
-- **View Files**: See all uploaded files with metadata
-- **Download**: Click download links to retrieve files
-- **Copy URLs**: Copy rd:// URLs for sharing
-- **File Info**: View file size, type, and upload date
-
-### System Statistics
-- **Live Updates**: Real-time statistics display
-- **Performance Metrics**: Cache hits, file counts, and storage usage
-- **System Health**: Monitor RandomFS system status
-
-## Customization
-
-### Styling
-The interface uses CSS custom properties for easy theming:
-
-```css
-:root {
-  --primary-color: #2563eb;
-  --secondary-color: #64748b;
-  --background-color: #f8fafc;
-  --text-color: #1e293b;
-  --border-color: #e2e8f0;
-}
-```
-
-### Configuration
-Modify `js/config.js` to customize behavior:
-
-```javascript
-const CONFIG = {
-  maxFileSize: 100 * 1024 * 1024, // 100MB
-  allowedTypes: ['*/*'],
-  autoRefresh: true,
-  refreshInterval: 5000
-};
-```
-
-## Browser Support
-
-- **Chrome**: 90+
-- **Firefox**: 88+
-- **Safari**: 14+
-- **Edge**: 90+
-- **Mobile Browsers**: iOS Safari 14+, Chrome Mobile 90+
 
 ## Development
 
 ### Local Development
 ```bash
-# Clone repository
-git clone https://github.com/TheEntropyCollective/randomfs-web
-cd randomfs-web
+# Install dependencies
+go mod tidy
 
-# Start development server
-python3 -m http.server 8000
+# Run with hot reload (requires air or similar)
+air
 
-# Open in browser
-open http://localhost:8000
+# Run tests
+go test ./...
+
+# Build for different platforms
+GOOS=linux GOARCH=amd64 go build -o randomfs-web-linux main.go
+GOOS=darwin GOARCH=amd64 go build -o randomfs-web-macos main.go
+GOOS=windows GOARCH=amd64 go build -o randomfs-web-windows.exe main.go
 ```
 
-### Building for Production
-The web interface is already optimized for production. For additional optimization:
-
+### Testing
 ```bash
-# Minify CSS (requires Node.js)
-npx clean-css-cli css/style.css -o css/style.min.css
+# Run all tests
+make test
 
-# Minify JavaScript (requires Node.js)
-npx terser js/app.js -o js/app.min.js
+# Run without IPFS for testing
+make run-no-ipfs
 ```
 
 ## Deployment
 
-### Static Hosting
-Deploy to any static hosting service:
-
-- **GitHub Pages**: Push to `gh-pages` branch
-- **Netlify**: Drag and drop the folder
-- **Vercel**: Connect GitHub repository
-- **AWS S3**: Upload files to S3 bucket
-- **Nginx**: Serve from web root
-
 ### Docker
 ```dockerfile
-FROM nginx:alpine
-COPY . /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+FROM golang:1.21-alpine AS builder
+WORKDIR /app
+COPY . .
+RUN go mod download
+RUN go build -o randomfs-web main.go
+
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=builder /app/randomfs-web .
+COPY --from=builder /app/web ./web
+EXPOSE 8080
+CMD ["./randomfs-web"]
 ```
 
-### CDN Integration
-For production deployments, consider using a CDN:
+### Systemd Service
+```ini
+[Unit]
+Description=RandomFS Web Server
+After=network.target
 
-```html
-<!-- Example with Cloudflare -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/..."></script>
+[Service]
+Type=simple
+User=randomfs
+WorkingDirectory=/opt/randomfs-web
+ExecStart=/opt/randomfs-web/randomfs-web
+Environment=RANDOMFS_PORT=8080
+Environment=RANDOMFS_DATA_DIR=/var/lib/randomfs
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
 ```
 
-## API Documentation
+### Nginx Reverse Proxy
+```nginx
+server {
+    listen 80;
+    server_name randomfs.example.com;
 
-### File Upload
-```javascript
-const formData = new FormData();
-formData.append('file', file);
-
-fetch('/api/v1/store', {
-  method: 'POST',
-  body: formData
-})
-.then(response => response.json())
-.then(data => {
-  console.log('Uploaded:', data.rd_url);
-});
-```
-
-### Get Statistics
-```javascript
-fetch('/api/v1/stats')
-.then(response => response.json())
-.then(data => {
-  console.log('Files stored:', data.files_stored);
-});
-```
-
-### Download File
-```javascript
-window.location.href = `/api/v1/retrieve/${hash}`;
+    location / {
+        proxy_pass http://localhost:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
 ```
 
 ## Troubleshooting
 
 ### Common Issues
 
-**Upload Fails**
-- Check that the RandomFS HTTP Server is running
-- Verify API endpoint configuration
-- Check file size limits
-- Ensure CORS is properly configured
+1. **IPFS Connection Failed**
+   - Ensure IPFS daemon is running: `ipfs daemon`
+   - Check IPFS API endpoint: `curl http://localhost:5001/api/v0/version`
 
-**Files Not Loading**
-- Verify API connectivity
-- Check browser console for errors
-- Ensure proper file permissions
+2. **Port Already in Use**
+   - Change port: `RANDOMFS_PORT=3000 ./randomfs-web`
+   - Check what's using the port: `lsof -i :8080`
 
-**Styling Issues**
-- Clear browser cache
-- Check CSS file loading
-- Verify responsive breakpoints
+3. **Permission Denied**
+   - Ensure write permissions to data directory
+   - Run with appropriate user permissions
 
-### Debug Mode
-Enable debug mode by setting:
+4. **File Upload Fails**
+   - Check file size limits (default: 32MB)
+   - Verify IPFS is accessible
+   - Check server logs for detailed error messages
 
-```javascript
-localStorage.setItem('debug', 'true');
-```
+### Logs
+The server provides detailed logging. Common log messages:
+- `RandomFS Web Server starting on port 8080`
+- `Data directory: ./data`
+- `Web interface available at: http://localhost:8080`
 
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Test across different browsers
+4. Add tests if applicable
 5. Submit a pull request
-
-### Development Guidelines
-- Use semantic HTML
-- Follow CSS best practices
-- Write clean, documented JavaScript
-- Test on multiple devices and browsers
-- Maintain accessibility standards
 
 ## License
 
-MIT License - see LICENSE file for details.
-
-## Related Projects
-
-- [randomfs-core](https://github.com/TheEntropyCollective/randomfs-core) - Core library
-- [randomfs-cli](https://github.com/TheEntropyCollective/randomfs-cli) - Command-line interface
-- [randomfs-http](https://github.com/TheEntropyCollective/randomfs-http) - HTTP server 
+This project is licensed under the MIT License - see the LICENSE file for details. 
