@@ -7,6 +7,6 @@ require (
 	github.com/gorilla/mux v1.8.1
 )
 
-replace github.com/TheEntropyCollective/randomfs-core => ../randomfs-core
+replace github.com/TheEntropyCollective/randomfs-core => ../randomfs-core/pkg/randomfs
 
 // This module contains static web assets and does not require Go dependencies
