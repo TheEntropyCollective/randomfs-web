@@ -250,11 +250,11 @@
                 <ul>
                     <li>Files are split into randomized blocks stored on IPFS</li>
                     <li>Each block serves multiple files simultaneously</li>
-                    <li>Access via rd:// URLs for decentralized retrieval</li>
+                    <li>Access via rfs:// URLs for decentralized retrieval</li>
                     <li>Three block sizes optimized for different file categories</li>
                     <li>Local caching for improved performance</li>
                 </ul>
-                <p><strong>rd:// URL Format:</strong> rd://host/version/filesize/filename/timestamp/hash</p>
+                <p><strong>rfs:// URL Format:</strong> rfs://host/version/filesize/filename/timestamp/hash</p>
             </div>
         </div>
     </div>
@@ -345,13 +345,13 @@
                     result.innerHTML += `
                         <div style="margin-bottom: 20px;">
                             <h4>✅ ${file.name} uploaded successfully!</h4>
-                            <p><strong>rd:// URL:</strong></p>
+                            <p><strong>rfs:// URL:</strong></p>
                             <div class="rd-url" onclick="copyToClipboard('${data.url}')">
                                 ${data.url}
                                 <button class="copy-btn">Copy</button>
                             </div>
                             <p><strong>IPFS Hash:</strong> ${data.hash}</p>
-                            <p><strong>Access URL:</strong> <a href="/rd/${btoa(data.url)}" target="_blank">/rd/${btoa(data.url)}</a></p>
+                            <p><strong>Access URL:</strong> <a href="/rfs/${btoa(data.url)}" target="_blank">/rfs/${btoa(data.url)}</a></p>
                         </div>
                     `;
 
@@ -404,7 +404,7 @@
 
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                alert('rd:// URL copied to clipboard!');
+                alert('rfs:// URL copied to clipboard!');
             }).catch(err => {
                 console.error('Could not copy text: ', err);
             });

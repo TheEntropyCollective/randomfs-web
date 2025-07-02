@@ -11,8 +11,8 @@ RandomFS Web Server is a standalone Go executable that provides a beautiful, use
 - **Web Interface**: Beautiful, responsive web UI for file management
 - **Drag & Drop Upload**: Intuitive file upload with drag-and-drop support
 - **File Management**: View and manage stored files
-- **rd:// URL Generation**: Automatic URL creation for file sharing
-- **Direct File Access**: Access files via `/rd/{encodedURL}` endpoints
+- **rfs:// URL Generation**: Automatic URL creation for file sharing
+- **Direct File Access**: Access files via `/rfs/{encodedURL}` endpoints
 - **Real-time Statistics**: Live system metrics display
 - **RESTful API**: Full API for programmatic access
 - **IPFS Integration**: Seamless integration with IPFS for decentralized storage
@@ -83,7 +83,7 @@ export RANDOMFS_IPFS_API=http://localhost:5001
 ### File Operations
 - `POST /api/v1/store` - Upload a file
 - `GET /api/v1/retrieve/{hash}` - Download a file by hash
-- `GET /rd/{encodedURL}` - Access file via encoded rd:// URL
+- `GET /rfs/{encodedURL}` - Access file via encoded rfs:// URL
 
 ### System Information
 - `GET /api/v1/stats` - Get system statistics
@@ -102,7 +102,7 @@ curl -X POST -F "file=@/path/to/file.txt" http://localhost:8080/api/v1/store
 Response:
 ```json
 {
-  "url": "rd://randomfs/v4/1024/file.txt/1640995200/QmHash...",
+  "url": "rfs://randomfs/v4/1024/file.txt/1640995200/QmHash...",
   "hash": "QmHash..."
 }
 ```
@@ -125,8 +125,8 @@ Response:
 
 ### Access File via Web URL
 ```bash
-# The rd:// URL is base64 encoded in the web path
-curl http://localhost:8080/rd/cmQ6Ly9yYW5kb21mcy92NC8xMDI0L2ZpbGUudHh0LzE2NDA5OTUyMDAvUW1IYXNoLi4u
+# The rfs:// URL is base64 encoded in the web path
+curl http://localhost:8080/rfs/cmQ6Ly9yYW5kb21mcy92NC8xMDI0L2ZpbGUudHh0LzE2NDA5OTUyMDAvUW1IYXNoLi4u
 ```
 
 ## File Structure

@@ -69,7 +69,7 @@ func (s *Server) setupRoutes() {
 	s.router.HandleFunc("/api/v1/retrieve/{hash}", s.handleRetrieve).Methods("GET")
 
 	// File access routes
-	s.router.HandleFunc("/rd/{encodedURL}", s.handleFileAccess).Methods("GET")
+	s.router.HandleFunc("/rfs/{encodedURL}", s.handleFileAccess).Methods("GET")
 
 	// Static file serving - serve web files
 	s.router.PathPrefix("/").HandlerFunc(s.handleStatic)
@@ -177,7 +177,7 @@ func (s *Server) handleFileAccess(w http.ResponseWriter, r *http.Request) {
 	// Parse the RandomURL
 	randomURL, err := randomfs.ParseRandomURL(string(decodedBytes))
 	if err != nil {
-		http.Error(w, "Invalid rd:// URL", http.StatusBadRequest)
+		http.Error(w, "Invalid rfs:// URL", http.StatusBadRequest)
 		return
 	}
 
