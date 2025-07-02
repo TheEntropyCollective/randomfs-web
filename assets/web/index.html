@@ -270,15 +270,22 @@
         // Load stats on page load
         loadStats();
 
-        // Upload area click handler
+        // Upload area click handler - prevent double triggering
+        let isUploading = false;
+        
         uploadBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent event from bubbling to uploadArea
-            fileInput.click();
+            e.preventDefault();
+            e.stopPropagation();
+            if (!isUploading) {
+                fileInput.click();
+            }
         });
 
         uploadArea.addEventListener('click', (e) => {
             // Only trigger if the click was directly on the upload area, not on the button
-            if (e.target === uploadArea) {
+            if ((e.target === uploadArea || e.target.classList.contains('upload-area')) && !isUploading) {
+                e.preventDefault();
+                e.stopPropagation();
                 fileInput.click();
             }
         });
@@ -302,12 +309,15 @@
 
         // File input change handler
         fileInput.addEventListener('change', (e) => {
-            uploadFiles(e.target.files);
+            if (!isUploading) {
+                uploadFiles(e.target.files);
+            }
         });
 
         async function uploadFiles(files) {
             if (files.length === 0) return;
 
+            isUploading = true;
             result.innerHTML = '';
             result.classList.remove('show');
             progressContainer.style.display = 'block';
@@ -364,6 +374,7 @@
             result.classList.add('show');
             uploadBtn.disabled = false;
             fileInput.value = '';
+            isUploading = false;
             
             // Reload stats
             loadStats();

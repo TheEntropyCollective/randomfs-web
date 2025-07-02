@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	randomfs "github.com/TheEntropyCollective/randomfs-core"
+	randomfs "github.com/TheEntropyCollective/randomfs-core/pkg/randomfs"
 	"github.com/gorilla/mux"
 )
 
