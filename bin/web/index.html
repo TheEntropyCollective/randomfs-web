@@ -4,126 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RandomFS - Modern Owner Free File System</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    
     <style>
-        /* Modern Font Stack with Retro Title */
         :root {
-            --font-primary: 'Orbitron', monospace;
-            --font-display: 'Orbitron', monospace;
-            --font-body: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
-        }
-       
-
-        /* Accent Color Options - Uncomment the option you want to use */
-        
-        /* Option 1: Current Purple Theme */
-        :root {
+            /* Light theme variables */
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
-            --bg-card: rgba(255, 255, 255, 0.85);
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-muted: #64748b;
-            --border-color: rgba(15, 23, 42, 0.08);
-            --accent-primary: #1a1a2e;
-            --accent-secondary: #16213e;
-            --accent-tertiary: #0f3460;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.1);
-            --glow: 0 0 15px rgba(26, 26, 46, 0.08);
-        }
-
-        /*
-        [data-theme="dark"] {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #111111;
-            --bg-card: rgba(17, 17, 17, 0.7);
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
+            --bg-card: rgba(255, 255, 255, 0.8);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
             --text-muted: #94a3b8;
-            --border-color: rgba(139, 92, 246, 0.2);
-            --accent-primary: #8b5cf6;
-            --accent-secondary: #a855f7;
-            --accent-tertiary: #c084fc;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-            --shadow-hover: 0 8px 30px rgba(139, 92, 246, 0.25);
-            --glow: 0 0 20px rgba(139, 92, 246, 0.2);
+            --border-color: rgba(148, 163, 184, 0.15);
+            --accent-primary: #3b82f6;
+            --accent-secondary: #6366f1;
+            --accent-tertiary: #8b5cf6;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.12);
+            --glow: 0 0 20px rgba(59, 130, 246, 0.1);
         }
-        */
-        
-        /* Option 2: Yellow Accent Theme */
-        /* :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
-            --bg-card: rgba(255, 255, 255, 0.85);
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-muted: #64748b;
-            --border-color: rgba(15, 23, 42, 0.08);
-            --accent-primary: #f59e0b;
-            --accent-secondary: #fbbf24;
-            --accent-tertiary: #fcd34d;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.1);
-            --glow: 0 0 15px rgba(245, 158, 11, 0.08);
-        } */
 
         [data-theme="dark"] {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #111111;
-            --bg-card: rgba(17, 17, 17, 0.7);
-            --text-primary: #f8fafc;
+            /* Dark theme variables */
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: rgba(30, 41, 59, 0.6);
+            --text-primary: #f1f5f9;
             --text-secondary: #cbd5e1;
             --text-muted: #94a3b8;
-            --border-color: rgba(245, 158, 11, 0.2);
-            --accent-primary: #f59e0b;
-            --accent-secondary: #fbbf24;
-            --accent-tertiary: #fcd34d;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-            --shadow-hover: 0 8px 30px rgba(245, 158, 11, 0.25);
-            --glow: 0 0 20px rgba(245, 158, 11, 0.2);
+            --border-color: rgba(59, 130, 246, 0.2);
+            --accent-primary: #60a5fa;
+            --accent-secondary: #818cf8;
+            --accent-tertiary: #a78bfa;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 16px 48px rgba(59, 130, 246, 0.15);
+            --glow: 0 0 30px rgba(59, 130, 246, 0.2);
         }
-        
-        /* Option 3: Light Gray Accent Theme */
-        
-        /* :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
-            --bg-card: rgba(255, 255, 255, 0.85);
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-muted: #64748b;
-            --border-color: rgba(15, 23, 42, 0.08);
-            --accent-primary: #6b7280;
-            --accent-secondary: #9ca3af;
-            --accent-tertiary: #d1d5db;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.1);
-            --glow: 0 0 15px rgba(107, 114, 128, 0.08);
-        } */
-
-        /* [data-theme="dark"] {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #111111;
-            --bg-card: rgba(17, 17, 17, 0.7);
-            --text-primary: #f8fafc;
-            --text-primary: #ffffff;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            --border-color: rgba(156, 163, 175, 0.2);
-            --accent-primary: #9ca3af;
-            --accent-secondary: #d1d5db;
-            --accent-tertiary: #e5e7eb;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-            --shadow-hover: 0 8px 30px rgba(156, 163, 175, 0.25);
-            --glow: 0 0 20px rgba(156, 163, 175, 0.2);
-        } */
 
         * {
             margin: 0;
@@ -132,7 +46,7 @@
         }
 
         body {
-            font-family: var(--font-body);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-primary);
             min-height: 100vh;
             color: var(--text-primary);
@@ -145,7 +59,7 @@
         .header-accent {
             position: relative;
             width: 100vw;
-            height: 400px;
+            height: 200px;
             background: transparent;
             overflow: hidden;
         }
@@ -161,7 +75,7 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 1rem 2rem 2.5rem 2rem;
+            padding: 2rem 2rem 2.5rem 2rem;
             position: relative;
             z-index: 1;
         }
@@ -175,14 +89,14 @@
             border-radius: 0.75rem;
             padding: 0.75rem;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all 0.3s ease;
             backdrop-filter: blur(20px);
             z-index: 10;
             box-shadow: var(--shadow);
         }
 
         .theme-toggle:hover {
-            transform: scale(1.01);
+            transform: scale(1.05);
             box-shadow: var(--shadow-hover);
             border-color: var(--accent-primary);
         }
@@ -193,26 +107,30 @@
             color: var(--text-primary);
         }
 
-        .controls-container {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            display: flex;
-            gap: 0.75rem;
-            z-index: 10;
-        }
-
-
-
         .header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 4rem;
             position: relative;
-            padding-top: 0.5rem;
+            padding-top: 1rem;
+        }
+
+        .header::before {
+            content: '⭐';
+            position: absolute;
+            top: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            opacity: 0.6;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+            50% { opacity: 1; transform: translateX(-50%) scale(1.1); }
         }
 
         .header h1 {
-            font-family: var(--font-display);
             font-size: 3.5rem;
             font-weight: 900;
             margin-bottom: 1rem;
@@ -221,11 +139,23 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             position: relative;
-            letter-spacing: -0.02em;
+        }
+
+        .header h1::after {
+            content: '✨';
+            position: absolute;
+            top: -0.5rem;
+            right: -2rem;
+            font-size: 1.5rem;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
         }
 
         .header p {
-            font-family: var(--font-body);
             font-size: 1.25rem;
             color: var(--text-secondary);
             margin-bottom: 0.5rem;
@@ -233,7 +163,6 @@
         }
 
         .header .description {
-            font-family: var(--font-body);
             color: var(--text-muted);
             max-width: 48rem;
             margin: 0 auto;
@@ -250,48 +179,58 @@
 
         .stat-card {
             background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
+            backdrop-filter: blur(25px);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
             border: 1px solid var(--border-color);
             display: flex;
             align-items: center;
-            transition: all 0.2s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
             box-shadow: var(--shadow);
         }
 
+        .stat-card::before {
+            content: '⭐';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.2rem;
+            opacity: 0.3;
+            animation: twinkle 4s ease-in-out infinite;
+        }
+
         .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
             border-color: var(--accent-primary);
-            box-shadow: var(--shadow-hover);
+            box-shadow: var(--shadow-hover), var(--glow);
         }
 
         .stat-icon {
             width: 4rem;
             height: 4rem;
-            border-radius: 1rem;
+            border-radius: 1.2rem;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 1.5rem;
             font-size: 2rem;
-            background: linear-gradient(135deg, rgba(26, 26, 46, 0.1), rgba(22, 33, 62, 0.1));
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(99, 102, 241, 0.15));
             color: var(--accent-primary);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(26, 26, 46, 0.15);
-            box-shadow: 0 2px 10px rgba(26, 26, 46, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
         }
 
         .stat-content h3 {
-            font-family: var(--font-mono);
             font-size: 2.5rem;
             font-weight: 800;
             color: var(--text-primary);
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.1);
         }
 
         .stat-content p {
-            font-family: var(--font-body);
             color: var(--text-secondary);
             font-size: 1rem;
             font-weight: 500;
@@ -312,26 +251,36 @@
 
         .card {
             background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            border-radius: 0.75rem;
-            padding: 2rem;
+            backdrop-filter: blur(25px);
+            border-radius: 2rem;
+            padding: 3rem;
             border: 1px solid var(--border-color);
-            transition: all 0.2s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
             box-shadow: var(--shadow);
             margin-bottom: 2rem;
         }
 
+        .card::before {
+            content: '✨';
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            opacity: 0.4;
+            animation: sparkle 3s ease-in-out infinite;
+        }
+
         .card:hover {
+            transform: translateY(-6px) scale(1.01);
             border-color: var(--accent-primary);
-            box-shadow: var(--shadow-hover);
+            box-shadow: var(--shadow-hover), var(--glow);
         }
 
         .card h2 {
-            font-family: var(--font-body);
-            font-size: 1.2rem;
-            font-weight: 500;
+            font-size: 1.8rem;
+            font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 2rem;
             display: flex;
@@ -343,30 +292,44 @@
             height: 2rem;
             margin-right: 0.75rem;
             color: var(--accent-primary);
-            filter: drop-shadow(0 0 3px rgba(26, 26, 46, 0.2));
+            filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.3));
         }
 
         .upload-area {
-            border: 2px dashed rgba(26, 26, 46, 0.2);
-            border-radius: 0.75rem;
-            padding: 2rem 1.5rem;
+            border: 2px dashed rgba(59, 130, 246, 0.3);
+            border-radius: 1.5rem;
+            padding: 3rem 2rem;
             text-align: center;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            background: rgba(26, 26, 46, 0.03);
+            background: rgba(59, 130, 246, 0.05);
             backdrop-filter: blur(10px);
+        }
+
+        .upload-area::before {
+            content: '⭐';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.2rem;
+            opacity: 0.4;
+            animation: twinkle 2.5s ease-in-out infinite;
         }
 
         .upload-area:hover {
             border-color: var(--accent-primary);
-            background: rgba(26, 26, 46, 0.06);
+            background: rgba(59, 130, 246, 0.1);
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
         }
 
         .upload-area.dragover {
             border-color: var(--accent-primary);
-            background: rgba(26, 26, 46, 0.08);
+            background: rgba(59, 130, 246, 0.15);
+            transform: scale(1.03);
+            box-shadow: 0 12px 35px rgba(59, 130, 246, 0.2);
         }
 
         .file-input {
@@ -374,27 +337,37 @@
         }
 
         .upload-btn, .download-btn {
-            font-family: var(--font-body);
             background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
             color: #fff;
             border: none;
             padding: 1.2rem 2.5rem;
-            border-radius: 0.875rem;
-            font-weight: 500;
+            border-radius: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: inline-flex;
             align-items: center;
-            font-size: 0.95rem;
+            font-size: 1rem;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(26, 26, 46, 0.2);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
             backdrop-filter: blur(10px);
+        }
+
+        .upload-btn::before, .download-btn::before {
+            content: '✨';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            font-size: 0.8rem;
+            opacity: 0.7;
+            animation: sparkle 2s ease-in-out infinite;
         }
 
         .upload-btn:hover:not(:disabled), .download-btn:hover:not(:disabled) {
             background: linear-gradient(135deg, var(--accent-secondary) 0%, var(--accent-primary) 100%);
-            transform: translateY(-1px);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4), 0 0 20px rgba(59, 130, 246, 0.2);
         }
 
         .upload-btn:disabled, .download-btn:disabled {
@@ -419,23 +392,22 @@
         }
 
         .download-input {
-            font-family: var(--font-mono);
             width: 100%;
-            padding: 1rem 1.25rem;
+            padding: 1.2rem 1.5rem;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
+            border-radius: 1rem;
             color: var(--text-primary);
             font-size: 1rem;
             margin-bottom: 1.5rem;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             backdrop-filter: blur(15px);
         }
 
         .download-input:focus {
             outline: none;
             border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(26, 26, 46, 0.08), var(--glow);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), var(--glow);
             background: var(--bg-card);
         }
 
@@ -449,13 +421,13 @@
 
         .file-item {
             background: var(--bg-card);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
+            border-radius: 1.5rem;
+            padding: 2rem;
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid var(--border-color);
             backdrop-filter: blur(20px);
             box-shadow: var(--shadow);
@@ -463,13 +435,24 @@
             overflow: hidden;
         }
 
+        .file-item::before {
+            content: '⭐';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1rem;
+            opacity: 0.3;
+            animation: twinkle 3.5s ease-in-out infinite;
+        }
+
         .file-item:hover {
+            transform: translateX(5px) scale(1.02);
             border-color: var(--accent-primary);
             background: var(--bg-card);
+            box-shadow: var(--shadow-hover), var(--glow);
         }
 
         .file-info h3 {
-            font-family: var(--font-body);
             color: var(--text-primary);
             font-weight: 600;
             margin-bottom: 0.5rem;
@@ -477,21 +460,20 @@
         }
 
         .file-info p {
-            font-family: var(--font-body);
             color: var(--text-secondary);
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
         }
 
         .file-url {
-            font-family: var(--font-mono);
+            font-family: 'Monaco', 'Menlo', monospace;
             color: var(--accent-primary);
             font-size: 1rem;
             font-weight: 500;
+            text-shadow: 0 0 5px rgba(59, 130, 246, 0.2);
         }
 
         .file-hash {
-            font-family: var(--font-mono);
             color: var(--text-muted);
             font-size: 0.8rem;
         }
@@ -508,26 +490,24 @@
             border: none;
             border-radius: 0.75rem;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             color: var(--accent-primary);
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(10px);
-            font-family: var(--font-body);
-            font-weight: 500;
-            font-size: 0.9rem;
         }
 
         .action-btn:hover {
-            background: rgba(26, 26, 46, 0.08);
+            background: rgba(59, 130, 246, 0.1);
             color: var(--accent-primary);
-            transform: scale(1.02);
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
         }
 
         .action-btn.delete:hover {
-            background: rgba(239, 68, 68, 0.08);
+            background: rgba(239, 68, 68, 0.1);
             color: #ef4444;
-            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
         }
 
         .action-btn svg {
@@ -544,17 +524,17 @@
 
         .steps-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
             margin-top: 2rem;
         }
 
         .step {
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
             background: var(--bg-card);
-            border-radius: 0.75rem;
-            padding: 1.5rem 1rem 1.5rem 1rem;
+            border-radius: 1.5rem;
+            padding: 2.5rem 1.5rem 2rem 1.5rem;
             box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
             backdrop-filter: blur(20px);
@@ -562,8 +542,20 @@
             overflow: hidden;
         }
 
+        .step::before {
+            content: '✨';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.2rem;
+            opacity: 0.4;
+            animation: sparkle 2.5s ease-in-out infinite;
+        }
+
         .step:hover {
+            transform: translateY(-5px) scale(1.02);
             border-color: var(--accent-primary);
+            box-shadow: var(--shadow-hover), var(--glow);
         }
 
         .step-number {
@@ -574,25 +566,31 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 1.5rem;
-            font-family: var(--font-mono);
             font-weight: 800;
             font-size: 1.5rem;
             background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
             color: #fff;
-            box-shadow: 0 4px 15px rgba(26, 26, 46, 0.2);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3), 0 0 20px rgba(59, 130, 246, 0.2);
             position: relative;
         }
 
-        .step h3 {
-            font-family: var(--font-body);
-            color: var(--text-secondary);
-            font-weight: 500;
-            margin-bottom: 1rem;
+        .step-number::after {
+            content: '⭐';
+            position: absolute;
+            top: -0.5rem;
+            right: -0.5rem;
             font-size: 1rem;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        .step h3 {
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
         }
 
         .step p {
-            font-family: var(--font-body);
             color: var(--text-secondary);
             font-size: 1rem;
             line-height: 1.6;
@@ -601,7 +599,7 @@
         .progress {
             width: 100%;
             height: 0.75rem;
-            background: rgba(26, 26, 46, 0.08);
+            background: rgba(59, 130, 246, 0.1);
             border-radius: 0.5rem;
             overflow: hidden;
             margin: 1.5rem 0;
@@ -615,7 +613,7 @@
             width: 0%;
             transition: width 0.5s ease;
             position: relative;
-            box-shadow: 0 0 6px rgba(26, 26, 46, 0.2);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
         }
 
         .result {
@@ -625,13 +623,13 @@
 
         .result.show {
             display: block;
-            animation: slideIn 0.3s ease-out;
+            animation: slideIn 0.5s ease-out;
         }
 
         @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -640,23 +638,23 @@
         }
 
         .success-message {
-            background: rgba(34, 197, 94, 0.08);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-            border-radius: 1.25rem;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 1.5rem;
             padding: 2rem;
             margin-bottom: 1.5rem;
             backdrop-filter: blur(15px);
-            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.08);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.1);
         }
 
         .error-message {
-            background: rgba(239, 68, 68, 0.08);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            border-radius: 1.25rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 1.5rem;
             padding: 2rem;
             margin-bottom: 1.5rem;
             backdrop-filter: blur(15px);
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.08);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.1);
         }
 
         .icon {
@@ -704,24 +702,22 @@
 <body>
     <div class="header-accent">
         <canvas id="starfield"></canvas>
-        <div class="controls-container">
-            <button class="theme-toggle" id="themeToggle" title="Toggle theme">
-                <svg class="sun-icon" viewBox="0 0 24 24" style="display: none;">
-                    <circle cx="12" cy="12" r="5"/>
-                    <line x1="12" y1="1" x2="12" y2="3"/>
-                    <line x1="12" y1="21" x2="12" y2="23"/>
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                    <line x1="1" y1="12" x2="3" y2="12"/>
-                    <line x1="21" y1="12" x2="23" y2="12"/>
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                </svg>
-                <svg class="moon-icon" viewBox="0 0 24 24">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                </svg>
-            </button>
-        </div>
+        <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+            <svg class="sun-icon" viewBox="0 0 24 24" style="display: none;">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <svg class="moon-icon" viewBox="0 0 24 24">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+        </button>
     </div>
     <div class="container">
         <div class="header">
@@ -763,7 +759,7 @@
             <div class="card">
                 <h2>
                     <svg class="icon" viewBox="0 0 24 24">
-                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
                     </svg>
                     Upload to RandomFS
                 </h2>
@@ -772,7 +768,7 @@
                     <input type="file" id="fileInput" class="file-input" multiple>
                     <button class="upload-btn" id="uploadBtn">
                         <svg class="icon" viewBox="0 0 24 24">
-                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
                         </svg>
                         Select File
                     </button>
@@ -791,7 +787,7 @@
             <div class="card">
                 <h2>
                     <svg class="icon" viewBox="0 0 24 24">
-                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
                     </svg>
                     Download from rfs:// URL
                 </h2>
@@ -805,7 +801,7 @@
                     />
                     <button class="download-btn" id="downloadBtn">
                         <svg class="icon" viewBox="0 0 24 24">
-                            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
                         </svg>
                         Download & Reconstruct
                     </button>
@@ -851,72 +847,10 @@
         const sunIcon = document.querySelector('.sun-icon');
         const moonIcon = document.querySelector('.moon-icon');
         
-        // Star colors for different themes (must be defined before functions that use them)
-        const STAR_COLORS_LIGHT = [
-            'rgba(239,68,68,0.9)',   // red
-            'rgba(249,115,22,0.8)',  // orange
-            'rgba(234,179,8,0.7)',   // yellow
-            'rgba(34,197,94,0.8)',   // green
-            'rgba(6,182,212,0.7)',   // cyan
-            'rgba(59,130,246,0.8)',  // blue
-            'rgba(139,92,246,0.7)',  // violet
-            'rgba(236,72,153,0.8)',  // pink
-            'rgba(245,158,11,0.7)',  // amber
-            'rgba(16,185,129,0.8)',  // emerald
-            'rgba(99,102,241,0.7)',  // indigo
-            'rgba(132,204,22,0.8)'   // lime
-        ];
-        
-        const STAR_COLORS_DARK = [
-            'rgba(255,200,100,0.9)', // bright golden
-            'rgba(255,180,80,0.8)',  // warm orange
-            'rgba(255,160,60,0.7)',  // deep amber
-            'rgba(255,220,120,0.6)', // soft golden
-            'rgba(255,190,90,0.8)',  // medium golden
-            'rgba(255,170,70,0.7)',  // rich amber
-            'rgba(255,210,110,0.6)', // light golden
-            'rgba(255,150,50,0.8)',  // deep orange
-            'rgba(255,230,130,0.5)', // pale golden
-            'rgba(255,140,40,0.7)'   // warm amber
-        ];
-        
-        // Default to light theme colors
-        let STAR_COLORS = STAR_COLORS_LIGHT;
-        let stars = []; // Star array (must be defined before functions that use it)
-        
-        // Canvas initialization (must be defined before functions that use it)
-        const canvas = document.getElementById('starfield');
-        const ctx = canvas.getContext('2d');
-        
-        // Star functions (must be defined before they're called)
-        function createStars() {
-            stars = [];
-            const count = Math.floor(canvas.width * canvas.height / 1500); // Reduced star count for better performance
-            for (let i = 0; i < count; i++) {
-                stars.push(randomStar());
-            }
-        }
-        
-        function randomStar() {
-            const isLightTheme = document.documentElement.getAttribute('data-theme') !== 'dark';
-            return {
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                radius: isLightTheme ? (0.3 + Math.random() * 0.7) : (0.2 + Math.random() * 0.5), // Larger stars for light theme
-                color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
-                twinkle: 0.8 + Math.random() * 0.4,
-                speed: 0.005 + Math.random() * 0.01,
-                phase: Math.random() * Math.PI * 2
-            };
-        }
-        
         // Check for saved theme preference or default to light
         const currentTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', currentTheme);
         updateThemeIcon(currentTheme);
-        
-        // Update star colors based on initial theme
-        updateStarColors(currentTheme);
         
         themeToggle.addEventListener('click', () => {
             const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -925,7 +859,6 @@
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
-            updateStarColors(newTheme);
         });
         
         function updateThemeIcon(theme) {
@@ -937,13 +870,6 @@
                 moonIcon.style.display = 'block';
             }
         }
-        
-        function updateStarColors(theme) {
-            STAR_COLORS = theme === 'dark' ? STAR_COLORS_DARK : STAR_COLORS_LIGHT;
-            createStars(); // Recreate stars with new colors
-        }
-
-
 
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
@@ -1181,29 +1107,14 @@
 
         async function loadStats() {
             try {
-                // Add timeout to prevent hanging requests
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-                
-                const response = await fetch('/api/v1/stats', { 
-                    signal: controller.signal 
-                });
-                clearTimeout(timeoutId);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                
+                const response = await fetch('/api/v1/stats');
                 const stats = await response.json();
                 
                 document.getElementById('filesStored').textContent = stats.files_stored || 0;
                 document.getElementById('blocksGenerated').textContent = stats.blocks_generated || 0;
                 document.getElementById('totalSize').textContent = formatBytes(stats.total_size || 0);
             } catch (error) {
-                if (error.name !== 'AbortError') {
-                    console.error('Failed to load stats:', error);
-                }
-                // Don't update UI on error to avoid showing stale data
+                console.error('Failed to load stats:', error);
             }
         }
 
@@ -1215,53 +1126,60 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
-        // Load stats initially, then every 60 seconds (reduced frequency for better performance)
-        loadStats();
-        setInterval(loadStats, 60000);
+        setInterval(loadStats, 30000);
 
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        const STAR_COLORS = [
+            'rgba(180,200,255,0.25)', // soft blue
+            'rgba(220,220,255,0.18)', // soft white
+            'rgba(160,180,255,0.12)'
+        ];
         function resize() {
             canvas.width = window.innerWidth;
-            canvas.height = 400; // Reduced height to match header
+            canvas.height = window.innerHeight;
         }
-
+        function randomStar() {
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: 0.3 + Math.random() * 0.7,
+                color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
+                twinkle: 0.95 + Math.random() * 0.1,
+                speed: 0.01 + Math.random() * 0.02,
+                phase: Math.random() * Math.PI * 2
+            };
+        }
+        function createStars() {
+            stars = [];
+            const count = Math.floor(window.innerWidth * window.innerHeight / 3500); // much fewer
+            for (let i = 0; i < count; i++) {
+                stars.push(randomStar());
+            }
+        }
         function drawStars() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const now = Date.now(); // Cache timestamp to avoid multiple calls
-            
             for (const s of stars) {
-                const twinkleValue = Math.sin(now * s.speed + s.phase);
-                const tw = s.twinkle + twinkleValue * 0.2;
-                const alpha = 0.8 + 0.2 * twinkleValue;
-                
+                const tw = s.twinkle + Math.sin(Date.now() * s.speed + s.phase) * 0.05;
                 ctx.save();
                 ctx.beginPath();
                 ctx.arc(s.x, s.y, s.radius * tw, 0, Math.PI * 2);
                 ctx.shadowColor = s.color;
-                ctx.shadowBlur = 3; // Reduced blur for better performance
+                ctx.shadowBlur = 2;
                 ctx.fillStyle = s.color;
-                ctx.globalAlpha = alpha;
+                ctx.globalAlpha = 0.5 + 0.2 * Math.sin(Date.now() * s.speed + s.phase);
                 ctx.fill();
                 ctx.restore();
             }
         }
-        let lastFrameTime = 0;
-        const targetFPS = 30; // Limit to 30 FPS for better performance
-        const frameInterval = 1000 / targetFPS;
-
-        function animate(currentTime) {
-            if (currentTime - lastFrameTime >= frameInterval) {
-                drawStars();
-                lastFrameTime = currentTime;
-            }
+        function animate() {
+            drawStars();
             requestAnimationFrame(animate);
         }
-        let resizeTimeout;
         window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                resize();
-                createStars();
-            }, 250); // Debounce resize events
+            resize();
+            createStars();
         });
         resize();
         createStars();

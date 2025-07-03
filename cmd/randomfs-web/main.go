@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -13,6 +14,10 @@ import (
 
 	randomfs "github.com/TheEntropyCollective/randomfs-core/pkg/randomfs"
 	"github.com/gorilla/mux"
+)
+
+var (
+	noIPFS = flag.Bool("no-ipfs", false, "Disable IPFS (for testing without IPFS)")
 )
 
 type Server struct {
@@ -236,6 +241,8 @@ func (s *Server) Start() error {
 }
 
 func main() {
+	flag.Parse()
+
 	// Default configuration
 	port := "8080"
 	dataDir := "./data"
@@ -251,7 +258,12 @@ func main() {
 	if envIPFSAPI := os.Getenv("RANDOMFS_IPFS_API"); envIPFSAPI != "" {
 		ipfsAPI = envIPFSAPI
 	}
-	// Note: If RANDOMFS_IPFS_API is not set, we use the default "http://localhost:5001"
+
+	// Override with --no-ipfs flag if set
+	if *noIPFS {
+		ipfsAPI = ""
+		log.Printf("IPFS disabled via --no-ipfs flag")
+	}
 
 	// Create server
 	server, err := NewServer(port, dataDir, ipfsAPI)
